@@ -2,24 +2,28 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const { sendEmail } = require("../middlewares/sendEmail");
 const crypto = require("crypto");
-
+const cloudinary = require("cloudinary");
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, avatar } = req.body;
 
     let user = await User.findOne({ email });
     if (user) {
       return res
         .status(400)
-        .json({ success: false, message: "User already exist" });
+        .json({ success: false, message: "User already exists" });
     }
+
+    const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+      folder: "avatars",
+    });
 
     user = await User.create({
       name,
       email,
       password,
-      avatar: { public_id: "sample_id", url: "sampleurl" },
+      avatar: { public_id: myCloud.public_id, url: myCloud.secure_url },
     });
 
     const token = await user.generateToken();
@@ -46,7 +50,9 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email })
+      .select("+password")
+      .populate("posts followers following");
 
     if (!user) {
       return res.status(400).json({
@@ -91,7 +97,7 @@ exports.logout = async (req, res) => {
       .cookie("token", null, { expires: new Date(Date.now()), httpOnly: true })
       .json({
         success: true,
-        message: "Logged Out",
+        message: "Logged out",
       });
   } catch (error) {
     res.status(500).json({
@@ -107,7 +113,7 @@ exports.followUser = async (req, res) => {
     const loggedInUser = await User.findById(req.user._id);
 
     if (!userToFollow) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
         message: "User not found",
       });
@@ -115,7 +121,7 @@ exports.followUser = async (req, res) => {
 
     if (loggedInUser.following.includes(userToFollow._id)) {
       const indexfollowing = loggedInUser.following.indexOf(userToFollow._id);
-      const indexfollowers = loggedInUser.followers.indexOf(loggedInUser._id);
+      const indexfollowers = userToFollow.followers.indexOf(loggedInUser._id);
 
       loggedInUser.following.splice(indexfollowing, 1);
       userToFollow.followers.splice(indexfollowers, 1);
@@ -125,7 +131,7 @@ exports.followUser = async (req, res) => {
 
       res.status(200).json({
         success: true,
-        message: "User unfollowed",
+        message: "User Unfollowed",
       });
     } else {
       loggedInUser.following.push(userToFollow._id);
@@ -165,7 +171,7 @@ exports.updatePassword = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({
         success: false,
-        message: "Incorrect old password",
+        message: "Incorrect Old password",
       });
     }
 
@@ -174,7 +180,7 @@ exports.updatePassword = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Password updated",
+      message: "Password Updated",
     });
   } catch (error) {
     res.status(500).json({
@@ -188,13 +194,23 @@ exports.updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    const { name, email } = req.body;
+    const { name, email, avatar } = req.body;
 
     if (name) {
       user.name = name;
     }
     if (email) {
       user.email = email;
+    }
+
+    if (avatar) {
+      await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+      const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+        folder: "avatars",
+      });
+      user.avatar.public_id = myCloud.public_id;
+      user.avatar.url = myCloud.secure_url;
     }
 
     await user.save();
@@ -219,20 +235,26 @@ exports.deleteMyProfile = async (req, res) => {
     const following = user.following;
     const userId = user._id;
 
+    // Removing Avatar from cloudinary
+    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
     await user.remove();
+
+    // Logout user after deleting profile
 
     res.cookie("token", null, {
       expires: new Date(Date.now()),
       httpOnly: true,
     });
 
-    //delete all posts of the users
+    // Delete all posts of the user
     for (let i = 0; i < posts.length; i++) {
       const post = await Post.findById(posts[i]);
+      await cloudinary.v2.uploader.destroy(post.image.public_id);
       await post.remove();
     }
 
-    //removing user from followers follolwing
+    // Removing User from Followers Following
     for (let i = 0; i < followers.length; i++) {
       const follower = await User.findById(followers[i]);
 
@@ -241,7 +263,7 @@ exports.deleteMyProfile = async (req, res) => {
       await follower.save();
     }
 
-    //removing user from followings followers
+    // Removing User from Following's Followers
     for (let i = 0; i < following.length; i++) {
       const follows = await User.findById(following[i]);
 
@@ -250,13 +272,39 @@ exports.deleteMyProfile = async (req, res) => {
       await follows.save();
     }
 
+    // removing all comments of the user from all posts
+    const allPosts = await Post.find();
+
+    for (let i = 0; i < allPosts.length; i++) {
+      const post = await Post.findById(allPosts[i]._id);
+
+      for (let j = 0; j < post.comments.length; j++) {
+        if (post.comments[j].user === userId) {
+          post.comments.splice(j, 1);
+        }
+      }
+      await post.save();
+    }
+    // removing all likes of the user from all posts
+
+    for (let i = 0; i < allPosts.length; i++) {
+      const post = await Post.findById(allPosts[i]._id);
+
+      for (let j = 0; j < post.likes.length; j++) {
+        if (post.likes[j] === userId) {
+          post.likes.splice(j, 1);
+        }
+      }
+      await post.save();
+    }
+
     res.status(200).json({
       success: true,
       message: "Profile Deleted",
     });
   } catch (error) {
     res.status(500).json({
-      sucess: false,
+      success: false,
       message: error.message,
     });
   }
@@ -264,7 +312,9 @@ exports.deleteMyProfile = async (req, res) => {
 
 exports.myProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate("posts");
+    const user = await User.findById(req.user._id).populate(
+      "posts followers following"
+    );
 
     res.status(200).json({
       success: true,
@@ -280,10 +330,12 @@ exports.myProfile = async (req, res) => {
 
 exports.getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).populate("posts");
+    const user = await User.findById(req.params.id).populate(
+      "posts followers following"
+    );
 
     if (!user) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
         message: "User not found",
       });
@@ -303,7 +355,9 @@ exports.getUserProfile = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({
+      name: { $regex: req.query.name, $options: "i" },
+    });
 
     res.status(200).json({
       success: true,
@@ -373,30 +427,79 @@ exports.resetPassword = async (req, res) => {
       .createHash("sha256")
       .update(req.params.token)
       .digest("hex");
- 
-      const user = await User.findOne({
-        resetPasswordToken,
-        resetPasswordExpire: { $gt: Date.now() },
-      })
 
-      if(!user){
-          return res.status(401).json({
-              success:false,
-              message:"Token is invalid or has Expired"
-          })
-      }
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
 
-      user.password = req.body.password;
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Token is invalid or has expired",
+      });
+    }
 
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
-      await user.save();
+    user.password = req.body.password;
 
-      res.status(200).json({
-          success: true,
-          message: "password Updated"
-      })
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
 
+    res.status(200).json({
+      success: true,
+      message: "Password Updated",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.getMyPosts = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    const posts = [];
+
+    for (let i = 0; i < user.posts.length; i++) {
+      const post = await Post.findById(user.posts[i]).populate(
+        "likes comments.user owner"
+      );
+      posts.push(post);
+    }
+
+    res.status(200).json({
+      success: true,
+      posts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.getUserPosts = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    const posts = [];
+
+    for (let i = 0; i < user.posts.length; i++) {
+      const post = await Post.findById(user.posts[i]).populate(
+        "likes comments.user owner"
+      );
+      posts.push(post);
+    }
+
+    res.status(200).json({
+      success: true,
+      posts,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
