@@ -1,0 +1,39 @@
+export const styles = {
+        head:{
+            color:"#262626",
+            fontFamily: "'Open Sans', sans-serif",
+            fontSize:"18px",
+            display:"flex",
+            justifyContent:"center",
+            cursor:"pointer",
+            fontWeight:600,
+            mb:"10px"
+        },
+        box:{
+            maxHeight:"600px",
+            px:"20px",
+        },
+        imgInputBox:{
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center",
+            width:"270px",
+            marginBottom:"25px",
+            marginTop:"25px"
+        },
+        center:{
+            display:"flex",
+            justifyContent:"center",
+        },
+        name:{
+            display:"flex",
+            justifyContent:"center",
+            mb:"25px",
+            width:"300px"
+        },
+        loginBtn:{
+            width:"100%",
+            background:"#0095f6",
+            my:"25px",
+        },
+}

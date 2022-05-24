@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Courgette&family=Open+Sans&display=swap');
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  background-color: rgb(221, 221, 221);
+  color: rgb(65, 65, 65);
+  width: 100%;
+  padding: 1vmax;
+  border-radius: 30px;
+  border: none;
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+}
+
