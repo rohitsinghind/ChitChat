@@ -47,16 +47,19 @@ export default function AddFriends() {
   //   }
   // }
 
+  const mediaQuery = window.matchMedia("(max-width: 550px)");
+
   return (
     <>
     <Container maxWidth="xl">
       <Navbar/>
         <Box sx={styles.box}>
+          {mediaQuery.matches?"":
         <CardMedia
               component="img"
               sx={styles.img}
               image={require("../../assets/images/addFriends.jpg")}
-            />
+            />}
           <Paper  sx={styles.card}>
             <div>
             <Stack

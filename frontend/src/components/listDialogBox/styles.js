@@ -8,9 +8,29 @@ export const styles = {
         justifyContent:"center",
         cursor:"pointer",
         fontWeight:600,
-        mb:"10px"
+        mb:"10px",
+        width:"400px",
+        '@media (max-width: 550px)': {
+          width:"300px",
+          '@media (max-width: 390px)': {
+            width:"260px",
+          },
+        },
+        
+    },
+    noComments:{
+      color:"#9c9c9c",
+        fontFamily: "'Open Sans', sans-serif",
+        fontSize:"22px",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        my:"100px"
     },
     box:{
+      '@media (max-width: 550px)': {
+        width:"100%",
+      },
         maxHeight:"600px",
         overflow:"scroll",
         overflowX:"hidden",

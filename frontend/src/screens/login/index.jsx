@@ -51,17 +51,19 @@ export default function Login() {
     }
   }, [error,dispatch])
   
+  const mediaQuery = window.matchMedia("(max-width: 550px)");
 
   return (
     <>
      <Container maxWidth="xl">
       <Navbar/>
         <Box sx={styles.box}>
+          {mediaQuery.matches?"":
           <CardMedia
               component="img"
               sx={styles.img}
               image={require("../../assets/images/loginImg.jpg")}
-            />
+            />}
             <div>
             <Paper variant="outlined" sx={{ p: 4 }}>
             <Typography
@@ -126,7 +128,13 @@ export default function Login() {
             </div>
             <Box>
           </Box>
-        </Box>
+          </Box>
+          {mediaQuery.matches?
+          <CardMedia
+              component="img"
+              sx={styles.imgPhone}
+              image={require("../../assets/images/loginImg.jpg")}
+            />:""}
       <Footer/>
       </Container>
     </>

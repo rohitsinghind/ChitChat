@@ -19,7 +19,7 @@ export const styles = {
             alignItems:"center",
             width:"270px",
             marginBottom:"25px",
-            marginTop:"25px"
+            marginTop:"25px",
         },
         center:{
             display:"flex",
@@ -29,7 +29,10 @@ export const styles = {
             display:"flex",
             justifyContent:"center",
             mb:"25px",
-            width:"300px"
+            width:"300px",
+            '@media (max-width: 550px)': {
+                width:"100%",
+              },
         },
         loginBtn:{
             width:"100%",

@@ -76,7 +76,9 @@ export default function ListDialogbox({open, setOpen, heading, users=[]}) {
             </Typography>
             <Divider />
             <Box sx={styles.box} onClick={()=>{setOpen(false);}}>
-            {
+            {users?.length===0? <Typography sx={styles.noComments}>
+                No {heading} yet
+            </Typography>:
             users?.map((user) => (
               <User 
                 key={user._id}

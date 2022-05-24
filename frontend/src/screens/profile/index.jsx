@@ -86,11 +86,13 @@ const deletePostHandler = async (post_Id) => {
   dispatch(getUserProfile(params.id))
 };
 
+const mediaQuery = window.matchMedia("(max-width: 550px)");
+
   return (
     <>
         <Container maxWidth="xl">
       <Navbar/>
-      <Stack direction="row" spacing={"10%"} alignItems='center' sx={styles.center}>
+      <Stack direction={mediaQuery.matches?"column":"row"} spacing={"10%"} alignItems='center' sx={styles.center}>
         <Box>
             <Avatar
               src={user?.avatar.url}
@@ -101,7 +103,7 @@ const deletePostHandler = async (post_Id) => {
             </Typography>
           </Box>
           <Box>
-            <Stack direction="row" spacing={5} divider={<div>|</div>} alignItems='center'>
+            <Stack direction="row" spacing={mediaQuery.matches?2:5} divider={<div>|</div>} alignItems='center' justifyContent="center">
               <Stack alignItems='center'>
                 <Typography sx={styles.text1}>
                 {user?.posts.length}
@@ -111,7 +113,7 @@ const deletePostHandler = async (post_Id) => {
                 </Typography>
               </Stack>
               <Stack alignItems='center'>
-                <Typography sx={styles.text1}>
+                <Typography sx={styles.text1} onClick={()=>{setIsFollower(true); setOpen(true)}}>
                 {user?.followers.length}
                 </Typography>
                 <Typography sx={styles.text2} onClick={()=>{setIsFollower(true); setOpen(true)}}>
@@ -119,7 +121,7 @@ const deletePostHandler = async (post_Id) => {
                 </Typography>
               </Stack>
               <Stack alignItems='center'>
-                <Typography sx={styles.text1}>
+                <Typography sx={styles.text1} onClick={()=>{setIsFollower(false); setOpen(true)}}>
                 {user?.following.length}
                 </Typography>
                 <Typography sx={styles.text2} onClick={()=>{setIsFollower(false); setOpen(true)}}>

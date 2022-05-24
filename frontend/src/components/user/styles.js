@@ -7,7 +7,10 @@ export const styles = {
         my:"10px",
         py:"10px",
         borderRadius:"30px",
-        width:"400px"
+        width:"400px",
+        '@media (max-width: 550px)': {
+            width:"100%",
+          },
     },
     img:{
         width:"40px",

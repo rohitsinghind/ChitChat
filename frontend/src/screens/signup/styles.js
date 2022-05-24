@@ -4,6 +4,9 @@ export const styles = {
         display:"flex",
         alignItems:"center",
         justifyContent:"center",
+        '@media (max-width: 550px)': {
+            height: "auto",
+          },
     },
     textLogo:{
         fontFamily: "'Courgette', cursive",

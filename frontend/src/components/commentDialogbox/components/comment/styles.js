@@ -6,7 +6,13 @@ export const styles = {
         my:"10px",
         py:"10px",
         width:"600px",
-        position:"relative"
+        position:"relative",
+        '@media (max-width: 550px)': {
+            width:"300px",
+            '@media (max-width: 380px)': {
+                width:"270px",
+              },
+          },
     },
     img:{
         width:"40px",
@@ -29,6 +35,16 @@ export const styles = {
         display:"flex",
         alignItems:"center",
         ml:"20px"
+    },
+    commentMobile:{
+        color:"#4D4D4D",
+        fontFamily: "'Open Sans', sans-serif",
+        fontSize:"17px",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        ml:"20px",
+        mb:"10px"
     },
     deleteBtn:{
         position:"absolute",

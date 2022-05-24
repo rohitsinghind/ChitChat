@@ -4,6 +4,10 @@ export const styles = {
         display:"flex",
         justifyContent:"center",
         alignItems:"center",
+        '@media (max-width: 550px)': {
+          minHeight:"auto",
+          mt:"20px"
+        },
     },
     img:{
         width:"30%",
@@ -11,7 +15,10 @@ export const styles = {
     },
     searchInputBox:{
       width:"400px",
-      my:"15px"
+      my:"15px",
+      '@media (max-width: 550px)': {
+        width:"300px"
+      },
     },
     search:{
       display:"flex",
@@ -25,6 +32,9 @@ export const styles = {
         px:"10px",
         overflow:"scroll",
         overflowX:"hidden",
+        '@media (max-width: 550px)': {
+          height:"80vh",
+        },
         "::-webkit-scrollbar": {
             width:'5px'
           },

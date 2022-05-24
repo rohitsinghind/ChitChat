@@ -57,12 +57,13 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
+  const mediaQuery = window.matchMedia("(max-width: 550px)");
+
   return (
     <>
     <UploadDialogbox open={open} setOpen={setOpen} />
     <EditProfileDialogbox open={openEdit} setOpen={setOpenEdit} />
     <DeleteDialogbox open={openDelete} setOpen={setOpenDelete} />
-     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color='transparent'>
         <Toolbar>
         <CardMedia
@@ -74,6 +75,31 @@ export default function Navbar() {
             ChitChat
           </Typography>
           {!isAuthenticated?"":
+          mediaQuery.matches? <>
+          <IconButton size="large" edge="end" id="fade-button"
+                aria-controls={open2 ? 'fade-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open2 ? 'true' : undefined}
+                onClick={handleClick}
+                sx={{ml:"20px"}}
+                >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+                id="fade-menu"
+                MenuListProps={{
+                  'aria-labelledby': 'fade-button',
+                }}
+                anchorEl={anchorEl}
+                open={open2}
+                onClose={handleClose}
+                TransitionComponent={Fade}
+              >
+                <MenuItem onClick={()=>{setOpenEdit(true)}}>Edit Profile</MenuItem>
+                <MenuItem onClick={()=>{setOpenDelete(true)}}>Delete my account</MenuItem>
+                <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+              </Menu>
+          </>:
           <Box sx={styles.buttons}> 
             <IconButton size="large" sx={{color:`${location.pathname === "/"?"#005dab":"#545454"}`}} onClick={()=>{navigate("/")}}>
                 <HomeIcon />
@@ -115,7 +141,6 @@ export default function Navbar() {
           </Box>}
         </Toolbar>
       </AppBar>
-    </Box>
     </>
   )
 }

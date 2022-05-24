@@ -92,7 +92,7 @@ export default function CommentDialogbox({open, setOpen, postId, comments=[], ow
                 Comments
             </Typography>
             <Divider />
-            <Box sx={styles.box} onClick={()=>{setOpen(false);}}>
+            <Box sx={styles.box}>
             {comments?.length===0? <Typography sx={styles.noComments}>
                 No comments yet
             </Typography>:
@@ -106,6 +106,7 @@ export default function CommentDialogbox({open, setOpen, postId, comments=[], ow
                 ownerId={ownerId}
                 postId={postId}
                 commentId={user.commentId}
+                setOpen={setOpen}
               />
               ))}
               </Box>

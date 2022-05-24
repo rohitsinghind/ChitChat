@@ -8,12 +8,12 @@ import { getFollowingPosts, getUserPosts } from '../../../../store/Actions/User'
 import Card from '@mui/material/Card';
 import Avatar from '@mui/material/Avatar';
 import Typography from "@mui/material/Typography";
-import Button from '@mui/material/Button';
+import Box from "@mui/material/Box";
 import IconButton from '@mui/material/IconButton';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 
-export default function Comment({ userId, name, avatar, comment, ownerId, postId, commentId}) {
+export default function Comment({ userId, name, avatar, comment, ownerId, postId, commentId, setOpen}) {
 
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -28,19 +28,25 @@ export default function Comment({ userId, name, avatar, comment, ownerId, postId
     }
   };
 
+  const mediaQuery = window.matchMedia("(max-width: 550px)");
+
   return (
     <>
-        
-            <Card sx={styles.box}>
+            <Card>
+            <Box sx={styles.box}>
               <Avatar alt="" src={avatar} sx={styles.img}/>
                 <Link to={`/user/${userId}`} style={{textDecoration:"none"}}>
-                  <Typography sx={styles.name}>{name} : </Typography>
+                  <Typography onClick={()=>{setOpen(false);}} sx={styles.name}>{name} : </Typography>
                 </Link>
-                <Typography sx={styles.comment}>{comment}</Typography>
+                {mediaQuery.matches?"":
+                <Typography sx={styles.comment}>{comment}</Typography>}
                 {(user._id===ownerId || user._id===userId)?
-                <IconButton  variant="outlined" color="error" sx={styles.deleteBtn} onClick={deleteCommentHandle}>
+                <IconButton  variant="outlined" color="error" sx={styles.deleteBtn} onClick={()=>{deleteCommentHandle();setOpen(false);}} >
                   <DeleteForeverIcon />
                 </IconButton >:""}
+              </Box>
+              {mediaQuery.matches?
+                <Typography sx={styles.commentMobile}>{comment}</Typography>:""}
             </Card>
         
     </>

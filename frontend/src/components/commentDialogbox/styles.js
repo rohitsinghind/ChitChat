@@ -20,7 +20,10 @@ export const styles = {
     },
     commentInput:{
         width:"600px",
-        mt:"10px"
+        mt:"10px",
+        '@media (max-width: 550px)': {
+          width:"100%",
+        },
     },
     postBtn:{
       width:"80px",
@@ -31,6 +34,9 @@ export const styles = {
         height:"500px",
         overflow:"scroll",
         overflowX:"hidden",
+        '@media (max-width: 550px)': {
+          height:"400px",
+        },
         "::-webkit-scrollbar": {
             width:'5px'
           },

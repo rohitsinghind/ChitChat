@@ -8,6 +8,7 @@ import Signup from "./screens/signup";
 import Home from "./screens/home";
 import Profile from "./screens/profile";
 import AddFriends from "./screens/addFriends";
+import MobileAppBar from "./components/moblieAppBar";
 
 function App() {
 
@@ -39,7 +40,9 @@ function App() {
           element={isAuthenticated ? <Profile/>:<Login />}
         />
       </Routes>
+      <MobileAppBar/>
     </Router>
+    
     </>
   );
 }

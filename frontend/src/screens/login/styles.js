@@ -4,11 +4,16 @@ export const styles = {
         display:"flex",
         alignItems:"center",
         justifyContent:"center",
+        '@media (max-width: 550px)': {
+            height: "auto",
+            mt:"40px"
+          },
     },
     img:{
         width:"50%",
         mr:"30px"
     },
+   
     textLogo:{
         fontFamily: "'Courgette', cursive",
         fontSize:"34px",

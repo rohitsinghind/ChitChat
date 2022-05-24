@@ -35,6 +35,10 @@ export const styles = {
         width:"100%",
         minWidth:"600px",
         maxHeight:"600px",
+        '@media (max-width: 550px)': {
+            minWidth:"100%",
+            maxHeight:"600px",
+          },
     },
     BtnGrp:{
         m:"20px"

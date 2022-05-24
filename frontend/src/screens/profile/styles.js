@@ -41,12 +41,18 @@ export const styles = {
         fontFamily: "'Open Sans', sans-serif",
         fontSize:"28px",
         fontWeight:700,
+        '@media (max-width: 550px)': {
+            fontSize:"24px",
+          },
     },
     text2:{
         color:"#2D2D2D",
         fontFamily: "'Open Sans', sans-serif",
         fontSize:"17px",
         cursor:"pointer",
+        '@media (max-width: 550px)': {
+            fontSize:"15px",
+          },
         '&:hover':{
             color:"#546f83",
             fontWeight:600

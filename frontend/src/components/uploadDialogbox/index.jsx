@@ -112,13 +112,13 @@ const handleImageChange = (e) => {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={props.open}
-        maxWidth="md"
+        maxWidth="sm"
       >
         <BootstrapDialogTitle
           id="customized-dialog-title"
           onClose={handleClose}
         ></BootstrapDialogTitle>
-        <DialogContent sx={{width:"40vw"}}>
+        <DialogContent sx={styles.box}>
             <Typography sx={styles.head}>
                 Create new post
             </Typography>
