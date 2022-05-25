@@ -1,4 +1,5 @@
 export const styles = {
+  
     box: {
         height: '93vh',
         display:"flex",

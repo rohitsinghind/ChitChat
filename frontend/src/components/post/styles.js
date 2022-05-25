@@ -37,11 +37,14 @@ export const styles = {
         maxHeight:"600px",
         '@media (max-width: 550px)': {
             minWidth:"100%",
-            maxHeight:"600px",
+            maxHeight:"450px",
           },
     },
     BtnGrp:{
-        m:"20px"
+        m:"20px",
+        '@media (max-width: 550px)': {
+            m:"4px"
+          },
     },
     likeText:{
         ml:"20px",
@@ -52,6 +55,9 @@ export const styles = {
         fontWeight:600,
         cursor:"pointer",
         height:"22px",
+        '@media (max-width: 550px)': {
+            mb:"0px",
+          },
         '&:hover':{
             color:"#546f83",
             fontSize:"13px",
@@ -63,6 +69,9 @@ export const styles = {
         color:"#2D2D2D",
         fontFamily: "'Open Sans', sans-serif",
         fontSize:"12px",
+        '@media (max-width: 550px)': {
+            mb:"5px",
+          },
     },
     dateText:{
         ml:"20px",
@@ -70,6 +79,9 @@ export const styles = {
         color:"#2D2D2D",
         fontFamily: "'Open Sans', sans-serif",
         fontSize:"12px",
+        '@media (max-width: 550px)': {
+            mb:"10px",
+          },
     },
 
   };

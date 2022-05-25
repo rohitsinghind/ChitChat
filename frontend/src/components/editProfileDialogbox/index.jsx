@@ -72,7 +72,7 @@ export default function EditProfileDialogbox({open, setOpen}) {
   };
 
   const [avatar, setAvatar] = useState(user?.avatar.url);
-  const [creds, setCreds] = useState({name:user?.name, email:user?.email});
+  const [creds, setCreds] = useState({name:user?.name, phoneNumber:user?.email});
 
   const handleChange = (key) => {
     key.preventDefault();
@@ -94,7 +94,7 @@ export default function EditProfileDialogbox({open, setOpen}) {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    await dispatch(updateProfile(creds.name, creds.email, avatar));
+    await dispatch(updateProfile(creds.name, creds.phoneNumber, avatar));
     dispatch(loadUser());
     setOpen(false);
   };
@@ -134,10 +134,11 @@ export default function EditProfileDialogbox({open, setOpen}) {
           sx={styles.name}
         />
             <TextField
-          id="email"
-          label="Enter your Email"
-          placeholder="Email"
-          value={creds.email || ''}
+          id="phoneNumber"
+          label="Enter your Phone Number"
+          placeholder="Phone Number"
+          type="number"
+          value={creds.phoneNumber || ''}
           onChange={handleChange}
           sx={styles.center}
         />

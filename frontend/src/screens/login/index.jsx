@@ -22,14 +22,16 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Alert from '@mui/material/Alert';
 
 export default function Login() {
 
-  const [creds, setCreds] = useState({ email: '', password: '' });
+  const [creds, setCreds] = useState({ phoneNumber: '', password: '' });
   const [showPassword, setShowPassword] = useState(false)
   const dispatch = useDispatch();
 
   const {error} = useSelector((state)=> state.user);
+  const { message } = useSelector((state) => state.like);
 
   const handleChange = (key) => {
     key.preventDefault();
@@ -42,14 +44,27 @@ export default function Login() {
 
   const loginHandler = (e) => {
     e.preventDefault();
-    dispatch(loginUser(creds.email, creds.password))
+    dispatch(loginUser(creds.phoneNumber, creds.password))
   }
+
+  const [alert, setAlert] = useState("")
 
   useEffect(() => {
     if(error){
+      setAlert(error)
+      setTimeout(() => {
+        setAlert("");
+      }, 2000);
       dispatch({type: "clearErrors"});
     }
-  }, [error,dispatch])
+    if (message) {
+      setAlert(message);
+      setTimeout(() => {
+        setAlert("");
+      }, 2000);
+      dispatch({ type: "clearMessage" });
+    }
+  }, [error,dispatch,setAlert,message])
   
   const mediaQuery = window.matchMedia("(max-width: 550px)");
 
@@ -57,6 +72,8 @@ export default function Login() {
     <>
      <Container maxWidth="xl">
       <Navbar/>
+      {alert===""?<Box sx={{height:"48px"}}></Box>:
+      <Alert severity="error">{alert}</Alert>}
         <Box sx={styles.box}>
           {mediaQuery.matches?"":
           <CardMedia
@@ -71,10 +88,11 @@ export default function Login() {
                 ChitChat
             </Typography>
             <TextField
-          id="email"
-          label="Enter your Email"
-          placeholder="Email"
-          value={creds.email || ''}
+          id="phoneNumber"
+        type="number"
+          label="Enter your Phone Number"
+          placeholder="Phone Number"
+          value={creds.phoneNumber || ''}
           onChange={handleChange}
           sx={styles.center}
         />
